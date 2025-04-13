@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Catálogos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --rosa: #ffcce6;
+            --ocre: #d2b48c;
+            --fucsia: #ff66b3;
+            --azul-cielo: #87ceeb;
+            --verde: #90ee90;
+            --negro: #333;
+            --blanco: #fff;
+            --texto-oscuro: #333;
+            --texto-claro: #fff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.5s;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .configuracion {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .btn-eliminar {
+            background-color: #f44336;
+        }
+
+        .btn-eliminar:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-secundario {
+            background-color: #2196F3;
+        }
+
+        .btn-secundario:hover {
+            background-color: #0b7dda;
+        }
+
+        .btn-finalizar {
+            background-color: #9C27B0;
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 18px;
+        }
+
+        .btn-finalizar:hover {
+            background-color: #7B1FA2;
+        }
+
+        .secciones {
+            margin-top: 30px;
+        }
+
+        .seccion {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .seccion-titulo {
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .items {
+            margin-top: 15px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+
+        .item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-imagen {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .item-texto {
+            flex: 1;
+        }
+
+        .item-nombre {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .item-descripcion {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .item-precio {
+            background-color: #f5f5f5;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-left: 15px;
+            white-space: nowrap;
+        }
+
+        .previsualizacion {
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s;
+        }
+
+        .previsualizacion h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .catalogo-preview {
+            border: 1px dashed #ccc;
+            padding: 20px;
+            min-height: 200px;
+            border-radius: 10px;
+        }
+
+        .seccion-preview {
+            margin-bottom: 30px;
+        }
+
+        .seccion-preview h3 {
+            border-bottom: 2px solid;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .seccion-preview ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .seccion-preview li {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-preview-imagen {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .formulario-item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .formulario-item.visible {
+            display: block;
+        }
+
+        .formulario-item h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .form-group-input {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .form-group-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group-input input, .form-group-input textarea, .form-group-input select {
+            width: 100%;
+            padding: 10px 10px 10px 35px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group-input textarea {
+            min-height: 80px;
+            resize: vertical;
+            padding-left: 10px;
+        }
+
+        .form-group-input .input-icon {
+            position: absolute;
+            left: 10px;
+            top: 35px;
+            color: #666;
+        }
+
+        .preview-imagen {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .acciones-formulario {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-cancelar {
+            background-color: #757575;
+        }
+
+        .btn-cancelar:hover {
+            background-color: #616161;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .moneda {
+            font-size: 0.8em;
+            margin-left: 2px;
+        }
+
+        /* Estilos para el modal de finalización */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-contenido {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-titulo {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .modal-acciones {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-cerrar {
+            background-color: #757575;
+        }
+
+        /* Formulario para nueva sección */
+        .formulario-seccion {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .formulario-seccion.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Catálogos</h1>
+
+        <div class="configuracion">
+            <h2>Configuración del Catálogo</h2>
+            
+            <div class="form-group">
+                <label for="tipo-catalogo">Tipo de emprendimiento:</label>
+                <select id="tipo-catalogo">
+                    <option value="1">Catálogo de maquillajes</option>
+                    <option value="2">Menú de comidas rápidas</option>
+                    <option value="3">Venta de productos manufacturados</option>
+                    <option value="4">Venta de ropa</option>
+                    <option value="5">Venta de mercancía</option>
+                    <option value="6">Otro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="titulo-catalogo">Título del catálogo:</label>
+                <input type="text" id="titulo-catalogo" placeholder="Ej: Catálogo de Maquillaje 2023">
+            </div>
+        </div>
+
+        <div class="secciones">
+            <h2>Secciones del Catálogo</h2>
+            <button id="btn-nueva-seccion" class="btn-secundario">
+                <i class="fas fa-plus"></i> Crear Nueva Sección
+            </button>
+            
+            <div class="formulario-seccion" id="formulario-seccion">
+                <h3>Crear Nueva Sección</h3>
+                <div class="form-group-input">
+                    <label for="nombre-seccion">Nombre de la sección:</label>
+                    <input type="text" id="nombre-seccion" placeholder="Ej: Bases de Maquillaje">
+                    <i class="fas fa-heading input-icon"></i>
+                </div>
+                <div class="acciones-formulario">
+                    <button class="btn-cancelar" id="btn-cancelar-seccion">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button class="btn-secundario" id="btn-guardar-seccion">
+                        <i class="fas fa-save"></i> Guardar Sección
+                    </button>
+                </div>
+            </div>
+            
+            <div id="lista-secciones"></div>
+        </div>
+
+        <div class="formulario-item" id="formulario-item">
+            <h3>Añadir Nuevo Ítem</h3>
+            <div class="form-group-input">
+                <label for="item-nombre">Nombre del ítem:</label>
+                <input type="text" id="item-nombre" placeholder="">
+                <i class="fas fa-tag input-icon"></i>
+            </div>
+            <div class="form-group-input">
+                <label for="item-descripcion">Descripción (opcional):</label>
+                <textarea id="item-descripcion" placeholder=""></textarea>
+                <i class="fas fa-align-left input-icon"></i>
+            </div>
+            <div class="form-group-input">
+                <label for="item-precio">Precio:</label>
+                <input type="text" id="item-precio" placeholder="">
+                <i class="fas fa-dollar-sign input-icon"></i>
+            </div>
+            <div class="form-group-input">
+                <label for="item-moneda">Moneda:</label>
+                <select id="item-moneda">
+                    <option value="pesos">Pesos Colombianos (COP)</option>
+                    <option value="dolares">Dólares (USD)</option>
+                    <option value="euros">Euros (EUR)</option>
+                </select>
+                <i class="fas fa-money-bill-wave input-icon"></i>
+            </div>
+            <div class="form-group-input">
+                <label for="item-imagen">Imagen del producto (opcional):</label>
+                <input type="file" id="item-imagen" accept="image/*">
+                <img id="preview-imagen" class="preview-imagen" alt="Vista previa de la imagen">
+            </div>
+            <div class="acciones-formulario">
+                <button class="btn-cancelar" id="btn-cancelar-item">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn-secundario" id="btn-guardar-item">
+                    <i class="fas fa-save"></i> Guardar Ítem
+                </button>
+            </div>
+        </div>
+
+        <div class="previsualizacion" id="previsualizacion">
+            <h2>Previsualización del Catálogo</h2>
+            <div id="catalogo-preview" class="catalogo-preview">
+                <p>Aquí aparecerá la previsualización de tu catálogo.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="btn-finalizar" id="btn-finalizar">
+                <i class="fas fa-check-circle"></i> Terminar Catálogo
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de finalización -->
+    <div class="modal" id="modal-finalizado">
+        <div class="modal-contenido">
+            <h2 class="modal-titulo">¡Catálogo Finalizado!</h2>
+            <div id="contenido-final"></div>
+            <div class="modal-acciones">
+                <button class="btn-secundario" id="btn-ver-catalogo">
+                    <i class="fas fa-eye"></i> Ver Catálogo Completo
+                </button>
+                <button class="btn-cerrar" id="btn-cerrar-modal">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables globales
+            let secciones = [];
+            let tipoCatalogo = '1';
+            let tituloCatalogo = '';
+            let seccionActual = null;
+            let imagenItem = null;
+
+            // Elementos del DOM
+            const selectTipoCatalogo = document.getElementById('tipo-catalogo');
+            const inputTituloCatalogo = document.getElementById('titulo-catalogo');
+            const btnNuevaSeccion = document.getElementById('btn-nueva-seccion');
+            const listaSecciones = document.getElementById('lista-secciones');
+            const catalogoPreview = document.getElementById('catalogo-preview');
+            const previsualizacion = document.getElementById('previsualizacion');
+            const formularioItem = document.getElementById('formulario-item');
+            const btnFinalizar = document.getElementById('btn-finalizar');
+            const modalFinalizado = document.getElementById('modal-finalizado');
+            const btnCerrarModal = document.getElementById('btn-cerrar-modal');
+            const contenidoFinal = document.getElementById('contenido-final');
+            const btnVerCatalogo = document.getElementById('btn-ver-catalogo');
+
+            // Formulario de sección
+            const formularioSeccion = document.getElementById('formulario-seccion');
+            const inputNombreSeccion = document.getElementById('nombre-seccion');
+            const btnCancelarSeccion = document.getElementById('btn-cancelar-seccion');
+            const btnGuardarSeccion = document.getElementById('btn-guardar-seccion');
+
+            // Formulario de ítem
+            const inputItemNombre = document.getElementById('item-nombre');
+            const inputItemDescripcion = document.getElementById('item-descripcion');
+            const inputItemPrecio = document.getElementById('item-precio');
+            const selectItemMoneda = document.getElementById('item-moneda');
+            const inputItemImagen = document.getElementById('item-imagen');
+            const previewImagen = document.getElementById('preview-imagen');
+            const btnCancelarItem = document.getElementById('btn-cancelar-item');
+            const btnGuardarItem = document.getElementById('btn-guardar-item');
+
+            // Ejemplos según tipo de emprendimiento
+            const ejemplos = {
+                '1': { // Maquillajes
+                    seccion: ['Bases', 'Labiales', 'Sombras', 'Máscaras'],
+                    item: ['Base HD', 'Labial mate rojo', 'Paleta de sombras neutras', 'Máscara de pestañas'],
+                    descripcion: ['Base de larga duración', 'Labial de acabado mate', 'Paleta con 12 tonos neutros', 'A prueba de agua']
+                },
+                '2': { // Comidas rápidas
+                    seccion: ['Hamburguesas', 'Pizzas', 'Bebidas', 'Postres'],
+                    item: ['Hamburguesa clásica', 'Pizza hawaiana', 'Limonada natural', 'Brownie con helado'],
+                    descripcion: ['Carne, queso, lechuga y tomate', 'Jamón, piña y queso mozzarella', 'Hecha con limones frescos', 'Con helado de vainilla']
+                },
+                '3': { // Productos manufacturados
+                    seccion: ['Bolsos', 'Portatermos', 'Accesorios', 'Decoración'],
+                    item: ['Bolso de cuero', 'Portatermo personalizado', 'Llavero artesanal', 'Cuadro decorativo'],
+                    descripcion: ['Hecho a mano con cuero genuino', 'Capacidad para 500ml', 'Diseño único', 'Pintado a mano']
+                },
+                '4': { // Ropa
+                    seccion: ['Camisetas', 'Pantalones', 'Vestidos', 'Accesorios'],
+                    item: ['Camiseta básica', 'Jeans ajustados', 'Vestido de verano', 'Gorra plana'],
+                    descripcion: ['100% algodón', 'Modelo skinny fit', 'Tela fresca y liviana', 'Ajustable']
+                },
+                '5': { // Mercancía
+                    seccion: ['Electrónicos', 'Hogar', 'Oficina', 'Juguetes'],
+                    item: ['Auriculares inalámbricos', 'Juego de ollas', 'Organizador de escritorio', 'Set de construcción'],
+                    descripcion: ['Bluetooth 5.0', 'Acero inoxidable', 'Con múltiples compartimientos', '150 piezas']
+                },
+                '6': { // Otro
+                    seccion: ['Productos', 'Servicios', 'Promociones', 'Novedades'],
+                    item: ['Producto destacado', 'Servicio premium', 'Oferta especial', 'Lanzamiento'],
+                    descripcion: ['Descripción del producto', 'Detalles del servicio', 'Condiciones de la promoción', 'Características principales']
+                }
+            };
+
+            // Cambiar color de fondo según el tipo de catálogo
+            selectTipoCatalogo.addEventListener('change', function() {
+                tipoCatalogo = this.value;
+                cambiarFondo();
+                actualizarEjemplos();
+                actualizarPrevisualizacion();
+            });
+
+            // Actualizar placeholders con ejemplos
+            function actualizarEjemplos() {
+                const ejemplosTipo = ejemplos[tipoCatalogo] || ejemplos['6'];
+                
+                // Actualizar placeholder de título
+                let tituloEjemplo = '';
+                switch(tipoCatalogo) {
+                    case '1': tituloEjemplo = 'Catálogo de Maquillaje 2023'; break;
+                    case '2': tituloEjemplo = 'Menú Delicatessen'; break;
+                    case '3': tituloEjemplo = 'Productos Artesanales'; break;
+                    case '4': tituloEjemplo = 'Moda Primavera-Verano'; break;
+                    case '5': tituloEjemplo = 'Mercancía Variada'; break;
+                    default: tituloEjemplo = 'Mi Catálogo';
+                }
+                inputTituloCatalogo.placeholder = tituloEjemplo;
+                
+                // Actualizar placeholder de sección
+                inputNombreSeccion.placeholder = `Ej: ${ejemplosTipo.seccion[0]}`;
+            }
+
+            function cambiarFondo() {
+                let colorFondo, colorTexto, colorPreview;
+                
+                switch(tipoCatalogo) {
+                    case '1':
+                        colorFondo = 'var(--rosa)';
+                        colorPreview = 'var(--rosa)';
+                        colorTexto = 'var(--texto-oscuro)';
+                        break;
+                    case '2':
+                        colorFondo = 'var(--ocre)';
+                        colorPreview = 'var(--ocre)';
+                        colorTexto = 'var(--texto-oscuro)';
+                        break;
+                    case '3':
+                        colorFondo = 'var(--fucsia)';
+                        colorPreview = 'var(--fucsia)';
+                        colorTexto = 'var(--texto-oscuro)';
+                        break;
+                    case '4':
+                        colorFondo = 'var(--azul-cielo)';
+                        colorPreview = 'var(--azul-cielo)';
+                        colorTexto = 'var(--texto-oscuro)';
+                        break;
+                    case '5':
+                        colorFondo = 'var(--verde)';
+                        colorPreview = 'var(--verde)';
+                        colorTexto = 'var(--texto-oscuro)';
+                        break;
+                    case '6':
+                        colorFondo = 'var(--negro)';
+                        colorPreview = 'var(--negro)';
+                        colorTexto = 'var(--texto-claro)';
+                        break;
+                    default:
+                        colorFondo = 'var(--blanco)';
+                        colorPreview = 'var(--blanco)';
+                        colorTexto = 'var(--texto-oscuro)';
+                }
+                
+                document.body.style.backgroundColor = colorFondo;
+                previsualizacion.style.backgroundColor = colorPreview;
+                previsualizacion.style.color = colorTexto;
+            }
+
+            // Actualizar título del catálogo
+            inputTituloCatalogo.addEventListener('input', function() {
+                tituloCatalogo = this.value;
+                actualizarPrevisualizacion();
+            });
+
+            // Mostrar formulario para nueva sección
+            btnNuevaSeccion.addEventListener('click', function() {
+                formularioSeccion.classList.add('visible');
+                inputNombreSeccion.focus();
+            });
+
+            // Cancelar creación de sección
+            btnCancelarSeccion.addEventListener('click', function() {
+                formularioSeccion.classList.remove('visible');
+                inputNombreSeccion.value = '';
+            });
+
+            // Guardar nueva sección
+            btnGuardarSeccion.addEventListener('click', function() {
+                const nombre = inputNombreSeccion.value.trim();
+                
+                if (!nombre) {
+                    alert('Por favor ingrese un nombre para la sección');
+                    return;
+                }
+                
+                const nuevaSeccion = {
+                    id: Date.now(),
+                    nombre: nombre,
+                    items: []
+                };
+                
+                secciones.push(nuevaSeccion);
+                renderizarSecciones();
+                actualizarPrevisualizacion();
+                
+                // Limpiar y ocultar formulario
+                inputNombreSeccion.value = '';
+                formularioSeccion.classList.remove('visible');
+            });
+
+            // Mostrar formulario para añadir ítem
+            function mostrarFormularioItem(seccionId) {
+                seccionActual = seccionId;
+                
+                // Actualizar placeholders según el tipo de catálogo
+                const ejemplosTipo = ejemplos[tipoCatalogo] || ejemplos['6'];
+                const randomIndex = Math.floor(Math.random() * ejemplosTipo.item.length);
+                
+                inputItemNombre.placeholder = `Ej: ${ejemplosTipo.item[randomIndex]}`;
+                inputItemDescripcion.placeholder = `Ej: ${ejemplosTipo.descripcion[randomIndex]}`;
+                inputItemPrecio.placeholder = `Ej: ${Math.floor(Math.random() * 50) + 10}${tipoCatalogo === '1' ? '000' : '.00'}`;
+                
+                // Limpiar campos
+                inputItemNombre.value = '';
+                inputItemDescripcion.value = '';
+                inputItemPrecio.value = '';
+                selectItemMoneda.value = 'pesos';
+                inputItemImagen.value = '';
+                previewImagen.style.display = 'none';
+                imagenItem = null;
+                
+                formularioItem.classList.add('visible');
+                formularioItem.scrollIntoView({ behavior: 'smooth' });
+                inputItemNombre.focus();
+            }
+
+            // Previsualizar imagen seleccionada
+            inputItemImagen.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewImagen.src = event.target.result;
+                        previewImagen.style.display = 'block';
+                        imagenItem = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Ocultar formulario de ítem
+            function ocultarFormularioItem() {
+                formularioItem.classList.remove('visible');
+                seccionActual = null;
+            }
+
+            // Guardar nuevo ítem
+            btnGuardarItem.addEventListener('click', function() {
+                if (!seccionActual) return;
+                
+                const nombre = inputItemNombre.value.trim();
+                const descripcion = inputItemDescripcion.value.trim();
+                const precio = inputItemPrecio.value.trim();
+                const moneda = selectItemMoneda.value;
+                
+                if (!nombre || !precio) {
+                    alert('Por favor complete al menos el nombre y el precio del ítem');
+                    return;
+                }
+                
+                const seccion = secciones.find(s => s.id === seccionActual);
+                if (seccion) {
+                    seccion.items.push({
+                        id: Date.now(),
+                        nombre: nombre,
+                        descripcion: descripcion,
+                        precio: precio,
+                        moneda: moneda,
+                        imagen: imagenItem
+                    });
+                    
+                    renderizarItems(seccionActual);
+                    actualizarPrevisualizacion();
+                    ocultarFormularioItem();
+                }
+            });
+
+            // Cancelar formulario de ítem
+            btnCancelarItem.addEventListener('click', ocultarFormularioItem);
+
+            // Renderizar todas las secciones
+            function renderizarSecciones() {
+                listaSecciones.innerHTML = '';
+                
+                secciones.forEach(seccion => {
+                    const seccionElement = document.createElement('div');
+                    seccionElement.className = 'seccion';
+                    seccionElement.dataset.id = seccion.id;
+                    
+                    seccionElement.innerHTML = `
+                        <div class="seccion-header">
+                            <h3 class="seccion-titulo">${seccion.nombre}
+                                <span>
+                                    <button class="btn-secundario btn-agregar-item" data-seccion-id="${seccion.id}">
+                                        <i class="fas fa-plus-circle"></i> Añadir Ítem
+                                    </button>
+                                    <button class="btn-eliminar btn-eliminar-seccion" data-seccion-id="${seccion.id}">
+                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                    </button>
+                                </span>
+                            </h3>
+                        </div>
+                        <div class="items" id="items-${seccion.id}"></div>
+                    `;
+                    
+                    listaSecciones.appendChild(seccionElement);
+                    
+                    // Renderizar items de esta sección
+                    renderizarItems(seccion.id);
+                });
+                
+                // Agregar event listeners a los botones recién creados
+                document.querySelectorAll('.btn-agregar-item').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const seccionId = parseInt(this.dataset.seccionId);
+                        mostrarFormularioItem(seccionId);
+                    });
+                });
+                
+                document.querySelectorAll('.btn-eliminar-seccion').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const seccionId = parseInt(this.dataset.seccionId);
+                        eliminarSeccion(seccionId);
+                    });
+                });
+            }
+
+            // Renderizar items de una sección
+            function renderizarItems(seccionId) {
+                const seccion = secciones.find(s => s.id === seccionId);
+                if (!seccion) return;
+                
+                const itemsContainer = document.getElementById(`items-${seccionId}`);
+                itemsContainer.innerHTML = '';
+                
+                if (seccion.items.length === 0) {
+                    itemsContainer.innerHTML = '<p>No hay items en esta sección.</p>';
+                    return;
+                }
+                
+                seccion.items.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'item';
+                    itemElement.dataset.itemId = item.id;
+                    
+                    // Determinar el símbolo de moneda
+                    let simboloMoneda = '';
+                    switch(item.moneda) {
+                        case 'pesos':
+                            simboloMoneda = 'COP';
+                            break;
+                        case 'dolares':
+                            simboloMoneda = 'USD';
+                            break;
+                        case 'euros':
+                            simboloMoneda = 'EUR';
+                            break;
+                    }
+                    
+                    // Mostrar imagen si existe
+                    const imagenHTML = item.imagen ? 
+                        `<img src="${item.imagen}" class="item-imagen" alt="${item.nombre}">` : 
+                        '<div class="item-imagen" style="background: #eee; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image" style="color: #999;"></i></div>';
+                    
+                    itemElement.innerHTML = `
+                        <div class="item-info">
+                            ${imagenHTML}
+                            <div class="item-texto">
+                                <div class="item-nombre">${item.nombre}</div>
+                                ${item.descripcion ? `<div class="item-descripcion">${item.descripcion}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="item-precio">
+                            ${item.precio} <span class="moneda">${simboloMoneda}</span>
+                        </div>
+                        <button class="btn-eliminar btn-eliminar-item" data-seccion-id="${seccionId}" data-item-id="${item.id}">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
+                    `;
+                    
+                    itemsContainer.appendChild(itemElement);
+                });
+                
+                // Agregar event listeners a los botones de eliminar item
+                document.querySelectorAll('.btn-eliminar-item').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const seccionId = parseInt(this.dataset.seccionId);
+                        const itemId = parseInt(this.dataset.itemId);
+                        eliminarItem(seccionId, itemId);
+                    });
+                });
+            }
+
+            // Eliminar sección
+            function eliminarSeccion(seccionId) {
+                if (confirm('¿Estás seguro de eliminar esta sección y todos sus items?')) {
+                    secciones = secciones.filter(s => s.id !== seccionId);
+                    renderizarSecciones();
+                    actualizarPrevisualizacion();
+                }
+            }
+
+            // Eliminar item
+            function eliminarItem(seccionId, itemId) {
+                if (confirm('¿Estás seguro de eliminar este item?')) {
+                    const seccion = secciones.find(s => s.id === seccionId);
+                    if (seccion) {
+                        seccion.items = seccion.items.filter(i => i.id !== itemId);
+                        renderizarItems(seccionId);
+                        actualizarPrevisualizacion();
+                    }
+                }
+            }
+
+            // Actualizar previsualización del catálogo
+            function actualizarPrevisualizacion() {
+                let html = `<h2>${tituloCatalogo || 'Mi Catálogo'}</h2>`;
+                
+                secciones.forEach(seccion => {
+                    html += `<div class="seccion-preview">
+                        <h3>${seccion.nombre}</h3>
+                        <ul>`;
+                    
+                    seccion.items.forEach(item => {
+                        // Determinar el símbolo de moneda
+                        let simboloMoneda = '';
+                        switch(item.moneda) {
+                            case 'pesos':
+                                simboloMoneda = 'COP';
+                                break;
+                            case 'dolares':
+                                simboloMoneda = 'USD';
+                                break;
+                            case 'euros':
+                                simboloMoneda = 'EUR';
+                                break;
+                        }
+                        
+                        // Mostrar imagen si existe
+                        const imagenPreview = item.imagen ? 
+                            `<img src="${item.imagen}" class="item-preview-imagen" alt="${item.nombre}">` : 
+                            '<div class="item-preview-imagen" style="background: #eee; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image" style="color: #999; font-size: 2em;"></i></div>';
+                        
+                        html += `<li>
+                            ${imagenPreview}
+                            <div>
+                                <strong>${item.nombre}</strong>
+                                ${item.descripcion ? `<br><em>${item.descripcion}</em>` : ''}
+                                <br>Precio: $${item.precio} ${simboloMoneda}
+                            </div>
+                        </li>`;
+                    });
+                    
+                    html += `</ul></div>`;
+                });
+                
+                catalogoPreview.innerHTML = secciones.length > 0 ? html : '<p>Aquí aparecerá la previsualización de tu catálogo.</p>';
+            }
+
+            // Finalizar catálogo
+            btnFinalizar.addEventListener('click', function() {
+                if (secciones.length === 0) {
+                    alert('Por favor añade al menos una sección con items antes de finalizar');
+                    return;
+                }
+                
+                // Generar contenido para el modal
+                let contenido = `
+                    <h3>${tituloCatalogo || 'Mi Catálogo'}</h3>
+                    <p>¡Tu catálogo ha sido creado exitosamente!</p>
+                    <p>Haz clic en "Ver Catálogo Completo" para ver el resultado final.</p>
+                `;
+                
+                contenidoFinal.innerHTML = contenido;
+                
+                // Mostrar modal
+                modalFinalizado.style.display = 'flex';
+            });
+
+            // Ver catálogo completo
+            btnVerCatalogo.addEventListener('click', function() {
+                // Crear una nueva ventana
+                const ventanaCatalogo = window.open('', '_blank');
+                
+                // Crear el contenido HTML para el catálogo
+                let html = `
+                    <!DOCTYPE html>
+                    <html lang="es">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>${tituloCatalogo || 'Mi Catálogo'}</title>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                        <style>
+                            body {
+                                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                margin: 0;
+                                padding: 20px;
+                                color: #333;
+                                line-height: 1.6;
+                            }
+                            
+                            .catalogo-final {
+                                max-width: 800px;
+                                margin: 0 auto;
+                                padding: 20px;
+                            }
+                            
+                            .header-catalogo {
+                                text-align: center;
+                                margin-bottom: 30px;
+                                padding-bottom: 20px;
+                                border-bottom: 2px solid #eee;
+                            }
+                            
+                            .header-catalogo h1 {
+                                margin-bottom: 10px;
+                                color: #2c3e50;
+                            }
+                            
+                            .seccion-catalogo {
+                                margin-bottom: 40px;
+                            }
+                            
+                            .seccion-catalogo h2 {
+                                color: #3498db;
+                                border-bottom: 2px solid #3498db;
+                                padding-bottom: 5px;
+                                display: inline-block;
+                            }
+                            
+                            .item-catalogo {
+                                display: flex;
+                                align-items: center;
+                                gap: 20px;
+                                margin-bottom: 20px;
+                                padding: 20px;
+                                background-color: #f9f9f9;
+                                border-radius: 8px;
+                            }
+                            
+                            .imagen-item {
+                                width: 120px;
+                                height: 120px;
+                                object-fit: cover;
+                                border-radius: 8px;
+                            }
+                            
+                            .info-item {
+                                flex: 1;
+                            }
+                            
+                            .info-item h3 {
+                                margin-top: 0;
+                                margin-bottom: 10px;
+                                color: #2c3e50;
+                            }
+                            
+                            .info-item p {
+                                margin: 0;
+                                color: #666;
+                            }
+                            
+                            .precio-item {
+                                font-weight: bold;
+                                font-size: 1.2em;
+                                white-space: nowrap;
+                                color: #27ae60;
+                            }
+                            
+                            @media (max-width: 600px) {
+                                .item-catalogo {
+                                    flex-direction: column;
+                                    text-align: center;
+                                }
+                                
+                                .precio-item {
+                                    margin-top: 10px;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="catalogo-final">
+                            <div class="header-catalogo">
+                                <h1>${tituloCatalogo || 'Mi Catálogo'}</h1>
+                                <p>Catálogo generado el ${new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                            </div>
+                `;
+                
+                // Añadir las secciones e items
+                secciones.forEach(seccion => {
+                    html += `
+                        <div class="seccion-catalogo">
+                            <h2>${seccion.nombre}</h2>
+                    `;
+                    
+                    seccion.items.forEach(item => {
+                        // Determinar el símbolo de moneda
+                        let simboloMoneda = '';
+                        switch(item.moneda) {
+                            case 'pesos': simboloMoneda = 'COP'; break;
+                            case 'dolares': simboloMoneda = 'USD'; break;
+                            case 'euros': simboloMoneda = 'EUR'; break;
+                        }
+                        
+                        // Mostrar imagen si existe
+                        const imagenItem = item.imagen ? 
+                            `<img src="${item.imagen}" class="imagen-item" alt="${item.nombre}">` : 
+                            '<div class="imagen-item" style="background: #eee; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image" style="color: #999; font-size: 2em;"></i></div>';
+                        
+                        html += `
+                            <div class="item-catalogo">
+                                ${imagenItem}
+                                <div class="info-item">
+                                    <h3>${item.nombre}</h3>
+                                    ${item.descripcion ? `<p>${item.descripcion}</p>` : ''}
+                                </div>
+                                <div class="precio-item">
+                                    ${item.precio} ${simboloMoneda}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                });
+                
+                html += `
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                // Escribir el contenido en la nueva ventana
+                ventanaCatalogo.document.open();
+                ventanaCatalogo.document.write(html);
+                ventanaCatalogo.document.close();
+                
+                // Cerrar el modal
+                modalFinalizado.style.display = 'none';
+            });
+
+            // Cerrar modal
+            btnCerrarModal.addEventListener('click', function() {
+                modalFinalizado.style.display = 'none';
+            });
+
+            // Cerrar modal al hacer clic fuera del contenido
+            modalFinalizado.addEventListener('click', function(e) {
+                if (e.target === modalFinalizado) {
+                    modalFinalizado.style.display = 'none';
+                }
+            });
+
+            // Inicializar
+            cambiarFondo();
+            actualizarEjemplos();
+        });
+    </script>
+</body>
+</html>
